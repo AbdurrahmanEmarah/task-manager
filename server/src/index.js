@@ -1,5 +1,6 @@
 import express from 'express';
 import tasksRouter from './routes/tasks.routes.js';
+import { connectDB } from './config/db.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -16,6 +17,13 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api/tasks', tasksRouter);
 
-app.listen(PORT, () => {
-  console.log(`Server listening on http://localhost:${PORT}`);
-});
+// Connect to MongoDB first; only start accepting requests once that works.
+try {
+  await connectDB(process.env.MONGODB_URI);
+  app.listen(PORT, () => {
+    console.log(`Server listening on http://localhost:${PORT}`);
+  });
+} catch (err) {
+  console.error('Failed to start server:', err.message);
+  process.exit(1);
+}
