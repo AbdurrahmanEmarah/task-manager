@@ -1,19 +1,23 @@
 import { useState } from 'react'
 
 // Controlled form: React state is the single source of truth for each input's value.
-// Props: onAdd(title, priority) — App decides what "adding" means (in memory today, API on Day 5).
+// Props: onAdd(title, priority) → Promise<boolean>. The parent does the API call and
+// tells us whether it worked, so we only clear the input on success.
 export default function TaskForm({ onAdd }) {
   const [title, setTitle] = useState('')
   const [priority, setPriority] = useState('medium')
+  const [submitting, setSubmitting] = useState(false)
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault() // stop the browser's default full-page form POST/reload
 
     const trimmed = title.trim()
     if (!trimmed) return // same rule as the API: title is required
 
-    onAdd(trimmed, priority)
-    setTitle('') // clear the input; priority keeps its last choice
+    setSubmitting(true)
+    const ok = await onAdd(trimmed, priority)
+    setSubmitting(false)
+    if (ok) setTitle('') // on failure keep the text so the user can fix it and retry
   }
 
   return (
@@ -30,8 +34,8 @@ export default function TaskForm({ onAdd }) {
         <option value="medium">Medium</option>
         <option value="high">High</option>
       </select>
-      <button type="submit" className="primary" disabled={!title.trim()}>
-        Add
+      <button type="submit" className="primary" disabled={submitting || !title.trim()}>
+        {submitting ? 'Adding…' : 'Add'}
       </button>
     </form>
   )
