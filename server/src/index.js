@@ -1,6 +1,7 @@
 import express from 'express';
 import tasksRouter from './routes/tasks.routes.js';
 import { connectDB } from './config/db.js';
+import { notFound, errorHandler } from './middleware/error.middleware.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -16,6 +17,10 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/tasks', tasksRouter);
+
+// These two must come AFTER all routes.
+app.use(notFound);
+app.use(errorHandler);
 
 // Connect to MongoDB first; only start accepting requests once that works.
 try {
