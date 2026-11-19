@@ -1,11 +1,28 @@
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
+import AuthForm from '../components/AuthForm'
+import { useAuth } from '../auth/useAuth'
 
-// Placeholder — Day 6 (auth) turns this into a real form that calls POST /api/auth/register.
 export default function RegisterPage() {
+  const { user, register } = useAuth()
+  const navigate = useNavigate()
+
+  if (user) return <Navigate to="/" replace />
+
+  async function handleRegister(email, password) {
+    await register(email, password) // throws ApiError (400 short password, 409 email taken)
+    navigate('/', { replace: true })
+  }
+
   return (
     <>
       <h1>Register</h1>
-      <p className="muted">Coming on Day 6.</p>
+      <AuthForm
+        submitLabel="Create account"
+        busyLabel="Creating account…"
+        passwordAutoComplete="new-password"
+        onSubmit={handleRegister}
+      />
+      <p className="muted">Password: at least 8 characters.</p>
       <p>
         Already have an account? <Link to="/login">Log in</Link>
       </p>

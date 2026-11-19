@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import NavBar from './components/NavBar'
+import ProtectedRoute from './components/ProtectedRoute'
 import TasksPage from './pages/TasksPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
@@ -12,7 +13,14 @@ export default function App() {
     <>
       <NavBar />
       <Routes>
-        <Route path="/" element={<TasksPage />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <TasksPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="*" element={<NotFoundPage />} />
