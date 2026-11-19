@@ -23,7 +23,13 @@ const taskSchema = new mongoose.Schema(
       },
       default: 'medium',
     },
-    // Day 6 (auth) will add: userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+    // Owner of the task. Set by the server from the JWT — never from the request body.
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+      index: true, // every query filters by userId, so index it
+    },
   },
   { timestamps: true } // adds createdAt / updatedAt automatically
 );

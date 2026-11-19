@@ -1,5 +1,7 @@
 import express from 'express';
 import tasksRouter from './routes/tasks.routes.js';
+import authRouter from './routes/auth.routes.js';
+import { assertJwtConfigured } from './utils/jwt.js';
 import { connectDB } from './config/db.js';
 import { notFound, errorHandler } from './middleware/error.middleware.js';
 
@@ -16,6 +18,7 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', time: new Date().toISOString() });
 });
 
+app.use('/api/auth', authRouter);
 app.use('/api/tasks', tasksRouter);
 
 // These two must come AFTER all routes.
@@ -24,6 +27,7 @@ app.use(errorHandler);
 
 // Connect to MongoDB first; only start accepting requests once that works.
 try {
+  assertJwtConfigured(); // fail fast if JWT_SECRET is missing
   await connectDB(process.env.MONGODB_URI);
   app.listen(PORT, () => {
     console.log(`Server listening on http://localhost:${PORT}`);

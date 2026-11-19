@@ -20,6 +20,12 @@ export const errorHandler = (err, req, res, next) => {
     return res.status(400).json({ error: messages.join('; ') });
   }
 
+  // Unique index violated (e.g. registering an email that already exists)
+  if (err.code === 11000) {
+    const field = Object.keys(err.keyValue ?? {})[0] ?? 'value';
+    return res.status(409).json({ error: `That ${field} is already registered` });
+  }
+
   // A value couldn't be converted to the schema type, e.g. /api/tasks/abc (not an ObjectId)
   if (err.name === 'CastError') {
     const message = err.path === '_id' ? 'Invalid task id' : `${err.path} has an invalid value`;

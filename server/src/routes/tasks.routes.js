@@ -7,8 +7,12 @@ import {
   updateTask,
   deleteTask,
 } from '../controllers/tasks.controller.js';
+import { requireAuth } from '../middleware/auth.middleware.js';
 
 const router = Router();
+
+// Every task route requires a logged-in user (≈ [Authorize] on the whole controller).
+router.use(requireAuth);
 
 // Mounted at /api/tasks in index.js, so '/' here means /api/tasks
 router.get('/', getAllTasks);
