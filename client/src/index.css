@@ -1,0 +1,95 @@
+:root {
+  --bg: #f6f7f9;
+  --card: #ffffff;
+  --text: #1f2328;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --accent: #2563eb;
+  --danger: #b42318;
+  --high: #fde2e1;
+  --medium: #fff1c2;
+  --low: #dcfce7;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+#root {
+  max-width: 640px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+h1 { margin: 0 0 1rem; font-size: 1.75rem; }
+
+/* ---- task form ---- */
+form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+input[type='text'] { flex: 1; }
+input[type='text'], select, button {
+  font: inherit;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card);
+}
+button { cursor: pointer; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+button.danger { color: var(--danger); }
+button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ---- task list ---- */
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+}
+li:last-child { border-bottom: none; }
+li .title { flex: 1; overflow-wrap: anywhere; }
+.done { text-decoration: line-through; color: var(--muted); }
+
+.priority {
+  font-size: 0.75rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  text-transform: capitalize;
+}
+.priority.high { background: var(--high); }
+.priority.medium { background: var(--medium); }
+.priority.low { background: var(--low); }
+
+/* ---- status messages (Day 5) ---- */
+.muted { color: var(--muted); }
+.error {
+  color: var(--danger);
+  background: #fef3f2;
+  border: 1px solid #fecdca;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* ---- nav (Day 5, React Router) ---- */
+nav { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+nav a { color: var(--accent); text-decoration: none; }
+nav a.active { font-weight: 600; text-decoration: underline; }
